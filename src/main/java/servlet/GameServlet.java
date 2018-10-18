@@ -25,7 +25,7 @@ public class GameServlet extends HttpServlet {
         if (!checkDigitRepetition(userNumber)) {
             error = "Повторяются цифры!";
             request.getSession().setAttribute("error", error);
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("game.jsp");
         } else {
             if (listHistory.size() >= 1 && listHistory.get(listHistory.size() - 1).charAt(4) == '4') {
                 randomNumber = new RandomNumber();
@@ -37,7 +37,7 @@ public class GameServlet extends HttpServlet {
                     .concat(cows(userNumber, randomNumber.getNumber()).toString());
             listHistory.add(history);
             request.getSession().setAttribute("listHistory", listHistory);
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("game.jsp");
             history = "";
         }
     }

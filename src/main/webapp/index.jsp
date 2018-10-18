@@ -1,120 +1,45 @@
-<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%! char digit1; %>
-<%! char digit2; %>
-<%! char digit3; %>
-<%! char digit4; %>
 <%
-    ArrayList<String> listHistory = new ArrayList<>();
-    if (request.getSession().getAttribute("listHistory") != null) {
-        listHistory = (ArrayList<String>) request.getSession().getAttribute("listHistory");
+    String error = "";
+    if(request.getSession().getAttribute("errorEntrance") != null){
+        error = (String)request.getSession().getAttribute("errorEntrance");
     }
 %>
-<html lang=ru>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Вход</title>
+</head>
 <body>
 <label align="center"><h1>Игра быки и коровы</h1></label>
-<table align="center">
-    <tr>
-        <td>
-            Введите цифры
-        </td>
-    </tr>
-</table>
-<table align="center">
-    <tr>
-        <td>
-            <%
-                if (request.getSession().getAttribute("error") != null && !((String) (request.getSession()
-                        .getAttribute("error"))).isEmpty()) {
-                    out.println(request.getSession().getAttribute("error"));
-                }
-                else
-                if (listHistory != null && listHistory.size() >= 1 &&
-                        listHistory.get(listHistory.size() - 1).charAt(4) == '4') {
-                    out.println("Вы выиграли!");
-                }
-
-            %>
-        </td>
-    </tr>
-</table>
-<form action="GameServlet" method="post">
-    <table align="center">
-        <tr>
-            <td>
-                <select name="digit1" select="<%=digit1%>">
-                    <%
-                        for (int i = 0; i < 10; ++i) {
-                            out.println("<option>" + i + "</option>");
-                        }
-                    %>
-                </select>
-            </td>
-            <td>
-                <select name="digit2" select="<%=digit2%>">
-                    <%
-                        for (int i = 0; i < 10; ++i) {
-                            out.println("<option>" + i + "</option>");
-                        }
-                    %>
-                </select>
-            </td>
-            <td>
-                <select name="digit3" select="<%=digit3%>">
-                    <%
-                        for (int i = 0; i < 10; ++i) {
-                            out.println("<option>" + i + "</option>");
-                        }
-                    %>
-                </select>
-            </td>
-            <td>
-                <select name="digit4" select="<%=digit4%>">
-                    <%
-                        for (int i = 0; i < 10; ++i) {
-                            out.println("<option>" + i + "</option>");
-                        }
-                    %>
-                </select>
-            </td>
-        </tr>
-    </table>
-    <table align="center">
-        <td>
-            <button type="submit">
-                Играть
-            </button>
-        </td>
-    </table>
+<label align="center"><h1>Вход</h1></label>
+<%out.println("<table align=\"center\"> <tr> <td>"+error+"<td> <tr> </table>");%>
+<form align="center" action="EntranceServlet" method="post">
+    <p><strong>Логин:</strong>
+        <input maxlength="6" size="20" name = "login"></p>
+    <p><strong>Пароль:</strong>
+        <input type="password" maxlength="6" size="20" name = "password"></p>
+    <button type="submit">
+        Вход
+    </button>
 </form>
 <table align="center">
     <tr>
         <td>
-            Ход
+            <form align="center" action="registration.jsp" method="post">
+                <button type="submit">
+                    Регистрация
+                </button>
+            </form>
         </td>
         <td>
-            Число
-        </td>
-        <td>
-            Бык
-        </td>
-        <td>
-            Корова
+            <form align="center" action="statistic.jsp" method="post">
+                <button type="submit">
+                    Статистика
+                </button>
+            </form>
         </td>
     </tr>
-    <%
-        if (listHistory != null) {
-            for (int i = 0; i < listHistory.size(); ++i) {
-                out.println("<tr>");
-                out.println("<td>" + (i+1) + "</td>");
-                out.println("<td>" + listHistory.get(i).charAt(0) + listHistory.get(i).charAt(1)
-                        + listHistory.get(i).charAt(2) + listHistory.get(i).charAt(3) + "</td>");
-                out.println("<td>" + listHistory.get(i).charAt(4) + "</td>");
-                out.println("<td>" + listHistory.get(i).charAt(5) + "</td>");
-                out.println("</tr>");
-            }
-        }
-    %>
 </table>
 </body>
 </html>
