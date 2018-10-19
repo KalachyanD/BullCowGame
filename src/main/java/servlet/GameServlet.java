@@ -5,18 +5,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import dao.DAO;
 import model.*;
 
 public class GameServlet extends HttpServlet {
 
-    ArrayList<String> listHistory = new ArrayList<>();
-    RandomNumber randomNumber = new RandomNumber();
-    String error = "";
-    String history = "";
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ArrayList<String> listHistory = new ArrayList<>();
+        RandomNumber randomNumber = new RandomNumber();
+        String error = "";
+        String history = "";
+
         Character digit1 = request.getParameter("digit1").charAt(0);
         Character digit2 = request.getParameter("digit2").charAt(0);
         Character digit3 = request.getParameter("digit3").charAt(0);
@@ -28,6 +30,11 @@ public class GameServlet extends HttpServlet {
             response.sendRedirect("game.jsp");
         } else {
             if (listHistory.size() >= 1 && listHistory.get(listHistory.size() - 1).charAt(4) == '4') {
+                try {
+                    DAO.getInstance().update((String) request.getSession().getAttribute("user"), 1, listHistory.size());
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
                 randomNumber = new RandomNumber();
                 listHistory.clear();
             }

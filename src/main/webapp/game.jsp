@@ -1,6 +1,9 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    if(request.getSession().getAttribute("user") == null){
+        response.sendRedirect("index.jsp");
+    }
     ArrayList<String> listHistory = new ArrayList<>();
     if (request.getSession().getAttribute("listHistory") != null) {
         listHistory = (ArrayList<String>) request.getSession().getAttribute("listHistory");
@@ -103,7 +106,7 @@
             Корова
         </td>
         <td>
-            <form action="index.jsp" method="post">
+            <form action="ExitServlet" method="post">
                 <button type="submit">
                     Выход
                 </button>
