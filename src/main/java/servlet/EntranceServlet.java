@@ -26,7 +26,7 @@ public class EntranceServlet extends HttpServlet {
                 if (userCompare == null) {
                     error("Логин не существует!", request, response);
                 }
-                if (userCompare != null && user.getPassword() != userCompare.getPassword()) {
+                if (userCompare != null && !user.getPassword().equals(userCompare.getPassword())) {
                     error("Пароль введен неверно!", request, response);
                 }
 
