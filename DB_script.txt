@@ -1,0 +1,14 @@
+CREATE DATABASE game1;
+
+use game1;
+
+CREATE TABLE users (
+  login varchar(50) NOT NULL,
+  password varchar(50) NOT NULL,
+  games int unsigned,
+  attempts int unsigned,  
+  PRIMARY KEY (login)
+);
+
+INSERT INTO users(login, password, games, attempts) VALUES ('1', '1', 10, 85);
+INSERT INTO users(nickname, login, password, games_count, attempts_count) VALUES ('2', '2',5, 45);
