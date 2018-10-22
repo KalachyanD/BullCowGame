@@ -14,26 +14,27 @@ public class RegistrationServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String error = "";
-        User newUser = new User(request.getParameter("login"),request.getParameter("password"),0,0);
+        User newUser = new User(request.getParameter("login"), request.getParameter("password"), 0, 0);
 
-        if (newUser.getLogin().isEmpty() || newUser.getPassword().isEmpty()) {
-            error("Логин или пароль незаполнен!",request, response);
-        } else {
-            try {
-                User userCompare = DAO.getInstance().get(newUser.getLogin());
-                if(userCompare != null) {
-                    error("Логин уже существует!",request, response);
-                }else {
-                    try {
-                        DAO.getInstance().create(newUser);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    response.sendRedirect("index.jsp");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            if (newUser.getLogin().isEmpty() || newUser.getPassword().isEmpty()) {
+                error("Логин или пароль незаполнен!", request, response);
+                return;
             }
+
+            User userCompare = DAO.getInstance().get(newUser.getLogin());
+
+            if (userCompare != null) {
+                error("Логин уже существует!", request, response);
+                return;
+            } else {
+                DAO.getInstance().create(newUser);
+                response.sendRedirect("index.jsp");
+                return;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -41,11 +42,11 @@ public class RegistrationServlet extends HttpServlet {
         doPost(request, response);
     }
 
-    private void error(String message, HttpServletRequest request, HttpServletResponse response){
-        request.getSession().setAttribute("errorEntrance", message);
+    private void error(String message, HttpServletRequest request, HttpServletResponse response) {
+        request.getSession().setAttribute("errorRegistration", message);
         try {
             response.sendRedirect("registration.jsp");
-        }catch (IOException e ){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

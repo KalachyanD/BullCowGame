@@ -12,10 +12,10 @@ import dao.DAO;
 import model.*;
 
 public class GameServlet extends HttpServlet {
-
+    ArrayList<String> listHistory = new ArrayList<>();
+    RandomNumber randomNumber = new RandomNumber();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ArrayList<String> listHistory = new ArrayList<>();
-        RandomNumber randomNumber = new RandomNumber();
+
         String error = "";
         String history = "";
 
@@ -29,20 +29,20 @@ public class GameServlet extends HttpServlet {
             request.getSession().setAttribute("error", error);
             response.sendRedirect("game.jsp");
         } else {
-            if (listHistory.size() >= 1 && listHistory.get(listHistory.size() - 1).charAt(4) == '4') {
+            error = "";
+            request.getSession().setAttribute("error", error);
+            history = userNumber.concat(bulls(userNumber, randomNumber.getNumber()).toString())
+                    .concat(cows(userNumber, randomNumber.getNumber()).toString());
+            listHistory.add(history);
+            if (!listHistory.isEmpty() && listHistory.get(listHistory.size()-1).charAt(4) == '4') {
                 try {
-                    DAO.getInstance().update((String) request.getSession().getAttribute("user"), 1, listHistory.size());
+                    DAO.getInstance().update(((User) request.getSession().getAttribute("user")).getLogin(), 1, listHistory.size());
                 }catch (SQLException e){
                     e.printStackTrace();
                 }
                 randomNumber = new RandomNumber();
                 listHistory.clear();
             }
-            error = "";
-            request.getSession().setAttribute("error", error);
-            history = userNumber.concat(bulls(userNumber, randomNumber.getNumber()).toString())
-                    .concat(cows(userNumber, randomNumber.getNumber()).toString());
-            listHistory.add(history);
             request.getSession().setAttribute("listHistory", listHistory);
             response.sendRedirect("game.jsp");
             history = "";

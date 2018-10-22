@@ -11,30 +11,34 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class EntranceServlet extends HttpServlet {
+    User user;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user;
         String error = "";
-
-        user = new User(request.getParameter("login"), request.getParameter("password"), 0, 0);
-        error = "";
-        if (user.getLogin().isEmpty() || user.getPassword().isEmpty()) {
-            error("Логин или пароль незаполнен!",request, response);
-        } else {
-            try {
-                User userCompare = DAO.getInstance().get(user.getLogin());
-                if (userCompare == null) {
-                    error("Логин не существует!", request, response);
-                }
-                if (userCompare != null && !user.getPassword().equals(userCompare.getPassword())) {
-                    error("Пароль введен неверно!", request, response);
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            user = new User(request.getParameter("login"), request.getParameter("password"), 0, 0);
+            error = "";
+            if (user.getLogin().isEmpty() || user.getPassword().isEmpty()) {
+                error("Логин или пароль незаполнен!", request, response);
+                return;
             }
+
+            User userCompare = DAO.getInstance().get(user.getLogin());
+
+            if (userCompare == null) {
+                error("Логин не существует!", request, response);
+                return;
+            }
+            if (userCompare != null && !user.getPassword().equals(userCompare.getPassword())) {
+                error("Пароль введен неверно!", request, response);
+                return;
+            }
+
             request.getSession().setAttribute("user", user);
             response.sendRedirect("game.jsp");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -42,11 +46,11 @@ public class EntranceServlet extends HttpServlet {
         doPost(request, response);
     }
 
-    private void error(String message, HttpServletRequest request, HttpServletResponse response){
+    private void error(String message, HttpServletRequest request, HttpServletResponse response) {
         request.getSession().setAttribute("errorEntrance", message);
         try {
             response.sendRedirect("index.jsp");
-        }catch (IOException e ){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -37,7 +37,6 @@
                         listHistory.get(listHistory.size() - 1).charAt(4) == '4') {
                     out.println("Вы выиграли!");
                 }
-
             %>
         </td>
     </tr>
