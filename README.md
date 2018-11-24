@@ -1,5 +1,5 @@
 # bull-cow-game
-Web-application
+Web-application.
 I used MySQL community server 5.6.41
 
 
